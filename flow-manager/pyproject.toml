@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "flow-manager"
+version = "0.1.0"
+description = "Flow Manager microservice"
+packages = [{include = "flow_manager"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.111"
+uvicorn = "^0.29"
+pydantic = "^2.7"
+pyjwt = "^2.8"
+etcd3 = "^0.12"
+aiohttp = "^3.9"
+jsonschema = "^4.21"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1"
+etcd3mock = "^0.1"
+pytest-aiohttp = "^1.0"
+ruff = "^0.3"
+black = "^24.3"
+mypy = "^1.8"
+coverage = "^7.2"
