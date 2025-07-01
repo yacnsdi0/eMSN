@@ -1,7 +1,9 @@
-
 """arp.py – helper to extract hosts from ARP replies."""
-from ryu.lib.packet import packet, arp
+
 from typing import Optional, Tuple
+
+from ryu.lib.packet import arp, packet
+
 
 def parse_arp(data: bytes) -> Optional[Tuple[str, str]]:
     """Return (src_ip, src_mac) if ARP reply; else None."""

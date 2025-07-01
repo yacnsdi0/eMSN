@@ -1,0 +1,21 @@
+name: Flow Manager CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install poetry
+      - run: poetry install --no-interaction
+      - run: poetry run ruff flow_manager
+      - run: poetry run black --check flow_manager
+      - run: poetry run mypy flow_manager
+      - run: poetry run pytest -q

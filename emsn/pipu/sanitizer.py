@@ -1,11 +1,11 @@
-
 """Packet‑In sanitisation & schema for PIPU."""
+
 import os
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field, validator
-from ryu.lib.packet import packet, ethernet, vlan, ipv4
+from ryu.lib.packet import ethernet, ipv4, packet, vlan
 
 __all__ = ["PacketInEvent", "sanitize"]
 
@@ -23,12 +23,13 @@ class PacketInEvent(BaseModel):
     ipv4_src: Optional[str] = None
     ipv4_dst: Optional[str] = None
 
-    @validator("eth_src", "eth_dst", pre=True)
-    def lower_mac(cls, v):  # noqa
-        return v.lower()
+
+@validator("eth_src", "eth_dst", pre=True)
+def lower_mac(cls: type["PacketInEvent"], v: str) -> str:  # noqa
+    return v.lower()
 
 
-def sanitize(ofp_msg) -> PacketInEvent:
+def sanitize(ofp_msg: Any) -> PacketInEvent:
     pkt = packet.Packet(ofp_msg.data)
     eth = pkt.get_protocol(ethernet.ethernet)
     vlan_hdr = pkt.get_protocol(vlan.vlan)
