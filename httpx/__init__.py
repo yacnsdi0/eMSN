@@ -11,9 +11,13 @@ class BaseTransport:
 
 
 class Request:
-    def __init__(self, method: str, url: str):
+    def __init__(self, method: str, url: str, json: Any | None = None):
         self.method = method
         self.url = url
+        self._json = json
+
+    def json(self) -> Any:
+        return self._json
 
 
 class Response:
@@ -37,6 +41,11 @@ class Client:
 
 
 class AsyncClient:
+    def __init__(self, *, timeout: float | int | None = None, transport: Any | None = None, base_url: str = "") -> None:
+        self.timeout = timeout
+        self.transport = transport
+        self.base_url = base_url.rstrip("/")
+
     async def __aenter__(self) -> "AsyncClient":
         return self
 
@@ -45,5 +54,25 @@ class AsyncClient:
     ) -> None:
         pass
 
-    async def get(self, url: str, timeout: int | float | None = None) -> Response:
+    async def request(
+        self, method: str, url: str, *, json: Any | None = None, timeout: int | float | None = None
+    ) -> Response:
+        if url.startswith("/") and self.base_url:
+            url = f"{self.base_url}{url}"
+        req = Request(method, url, json)
+        if self.transport and hasattr(self.transport, "handler"):
+            return await self.transport.handler(req)
         return Response()
+
+    async def get(self, url: str, timeout: int | float | None = None) -> Response:
+        return await self.request("GET", url, timeout=timeout)
+
+    async def post(
+        self, url: str, *, json: Any | None = None, timeout: int | float | None = None
+    ) -> Response:
+        return await self.request("POST", url, json=json, timeout=timeout)
+
+
+class MockTransport:
+    def __init__(self, handler: Any) -> None:
+        self.handler = handler
