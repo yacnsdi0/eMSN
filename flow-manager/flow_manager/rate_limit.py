@@ -1,4 +1,5 @@
 """Simple per-IP async rate limiter."""
+
 from __future__ import annotations
 
 import asyncio
@@ -20,6 +21,8 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         ip = request.client.host
         sem = self.semaphores.setdefault(ip, asyncio.Semaphore(self.limit_per_host))
         if sem.locked() and sem._value == 0:  # not exported; acceptable for toy
-            raise HTTPException(status_code=429, detail="rate limit", headers={"Retry-After": "2"})
+            raise HTTPException(
+                status_code=429, detail="rate limit", headers={"Retry-After": "2"}
+            )
         async with sem:
             return await call_next(request)

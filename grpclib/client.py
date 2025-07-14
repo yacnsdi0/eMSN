@@ -1,5 +1,12 @@
 class Channel:
-    def __init__(self, host: str | None = None, port: int | None = None, *, transport=None, ssl=None):
+    def __init__(
+        self,
+        host: str | None = None,
+        port: int | None = None,
+        *,
+        transport=None,
+        ssl=None
+    ):
         self.transport = transport
         self.host = host
         self.port = port

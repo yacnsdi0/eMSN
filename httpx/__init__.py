@@ -41,7 +41,14 @@ class Client:
 
 
 class AsyncClient:
-    def __init__(self, *, timeout: float | int | None = None, transport: Any | None = None, base_url: str = "") -> None:
+    def __init__(
+        self,
+        *,
+        timeout: float | int | None = None,
+        transport: Any | None = None,
+        base_url: str = "",
+        **_: Any,
+    ) -> None:
         self.timeout = timeout
         self.transport = transport
         self.base_url = base_url.rstrip("/")
@@ -55,22 +62,35 @@ class AsyncClient:
         pass
 
     async def request(
-        self, method: str, url: str, *, json: Any | None = None, timeout: int | float | None = None
+        self,
+        method: str,
+        url: str,
+        *,
+        json: Any | None = None,
+        timeout: int | float | None = None,
+        **_: Any,
     ) -> Response:
         if url.startswith("/") and self.base_url:
             url = f"{self.base_url}{url}"
         req = Request(method, url, json)
         if self.transport and hasattr(self.transport, "handler"):
-            return await self.transport.handler(req)
+            from typing import cast
+
+            return cast(Response, await self.transport.handler(req))
         return Response()
 
     async def get(self, url: str, timeout: int | float | None = None) -> Response:
         return await self.request("GET", url, timeout=timeout)
 
     async def post(
-        self, url: str, *, json: Any | None = None, timeout: int | float | None = None
+        self,
+        url: str,
+        *,
+        json: Any | None = None,
+        timeout: int | float | None = None,
+        **kw: Any,
     ) -> Response:
-        return await self.request("POST", url, json=json, timeout=timeout)
+        return await self.request("POST", url, json=json, timeout=timeout, **kw)
 
 
 class MockTransport:
