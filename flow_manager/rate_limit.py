@@ -6,6 +6,7 @@ from typing import Dict
 
 from fastapi import Request, Response
 from starlette.status import HTTP_429_TOO_MANY_REQUESTS
+from typing import Awaitable, Callable
 
 
 class TimedSemaphore:
@@ -38,7 +39,9 @@ class ClientLimiter:
         return self._buckets[host]
 
 
-async def rate_limiter(request: Request, call_next):
+async def rate_limiter(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
     limiter: ClientLimiter = request.app.state.limiter
     client_ip = request.client.host if request.client else "unknown"
     sem = limiter.bucket(client_ip)

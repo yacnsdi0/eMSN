@@ -2,15 +2,15 @@ import os
 import sys
 
 base = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-sys.path.insert(0, os.path.join(base, "flow-manager"))
-sys.path.insert(0, base)
+sys.path.insert(0, os.path.join(base, "flow-manager"))  # noqa: E402
+sys.path.insert(0, base)  # noqa: E402
 
-import pytest
+import pytest  # noqa: E402
 
 pytest.skip("testclient unavailable", allow_module_level=True)
 
-from flow_manager.app import create_app
-from fastapi.testclient import TestClient
+from flow_manager.app import create_app  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 
 def test_healthz() -> None:

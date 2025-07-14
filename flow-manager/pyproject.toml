@@ -13,6 +13,8 @@ pyjwt = "^2.8"
 etcd3 = "^0.12"
 aiohttp = "^3.9"
 jsonschema = "^4.21"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+aiocache = "^0.12.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1"
