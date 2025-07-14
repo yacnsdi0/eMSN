@@ -1,0 +1,21 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install ruff black mypy bandit pytest coverage
+      - run: ruff --select E,F,I .
+      - run: black --check .
+      - run: mypy --strict emsn
+      - run: bandit -r emsn
+      - run: pytest -m unit --cov=emsn --cov-fail-under=90
