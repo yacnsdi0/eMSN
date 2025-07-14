@@ -1,4 +1,5 @@
 """JSON Schemas for ETCD values."""
+
 from __future__ import annotations
 
 HOST_SCHEMA = {
@@ -15,3 +16,11 @@ SWITCH_SCHEMA = {
 
 POLICY_SCHEMA = {"type": "object"}
 FLOW_SCHEMA = {"type": "object"}
+
+SCHEMAS = {
+    "host": HOST_SCHEMA,
+    "switch": SWITCH_SCHEMA,
+    "switche": SWITCH_SCHEMA,
+    "policy": POLICY_SCHEMA,
+    "flow": FLOW_SCHEMA,
+}
