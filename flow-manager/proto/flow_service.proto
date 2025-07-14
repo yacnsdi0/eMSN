@@ -1,0 +1,12 @@
+syntax = "proto3";
+package flowmanager;
+
+message FlowRequest {
+  string id = 1;
+  string switch = 2;
+}
+
+service FlowService {
+  rpc InstallFlow(FlowRequest) returns (FlowRequest);
+  rpc DeleteFlow(FlowRequest) returns (FlowRequest);
+}
