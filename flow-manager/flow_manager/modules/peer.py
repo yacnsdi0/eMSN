@@ -65,3 +65,14 @@ async def install_flow_remote(domain_id: int, request: FlowRequest) -> FlowAck:
         return await stub.InstallFlow(
             request, metadata={"authorization": f"Bearer {token}"}
         )
+
+
+async def delete_flow_remote(domain_id: int, request: FlowRequest) -> FlowAck:
+    host = f"fm-{domain_id}"
+    ssl = load_ssl_context("cert.pem", "key.pem", "ca.pem")
+    async with Channel(host, 8443, ssl=ssl) as channel:
+        stub = FlowServiceStub(channel)
+        token = _encode_jwt({"scope": "flows:write"})
+        return await stub.DeleteFlow(
+            request, metadata={"authorization": f"Bearer {token}"}
+        )
